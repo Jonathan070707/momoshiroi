@@ -506,3 +506,6 @@ footer:hover {
   background-color: var(--hover-text-color);
 }
 
+.textedit{
+  color: black;
+}

@@ -1,3 +1,10 @@
+<?php
+include 'db.php';
+
+$sql = "SELECT id, title, caption, image, created_at FROM eventmomoshiroi ORDER BY created_at DESC";
+$result = $conn->query($sql);
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -56,24 +63,33 @@
   <!-- Events section -->
   <section id="events">
     <div class="main-container">
+
       <h2 class="section-title">Our Events</h2>
+
+      <div class="add-event-button">
+            <a href="(edit)add_event.php">
+                <h1>Add event</h1>
+            </a>
       <div class="grid-4">
-        <div class="card">
-          <img src="image/event1.jpg" alt="Event 1">
-          <p class="caption">Event 1</p>
-        </div>
-        <div class="card">
-          <img src="image/event2.jpg" alt="Event 2">
-          <p class="caption">Event 2</p>
-        </div>
-        <div class="card">
-          <img src="image/event3.jpg" alt="Event 3">
-          <p class="caption">Event 3</p>
-        </div>
-        <div class="card">
-          <img src="image/event4.jpg" alt="Event 4">
-          <p class="caption">Event 4</p>
-        </div>
+      <?php
+                    if ($result && $result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<div class="card">'; 
+                            echo '<a href="(edit)delete_event.php?id=' . htmlspecialchars($row["id"]) . '" onclick="return confirm(\'Are you sure you want to delete this event?\')">Delete</a>';
+                            echo " - ";
+                            echo '<a href="(edit)edit_event.php?id=' . htmlspecialchars($row["id"]) . '">Edit</a>';
+                            echo '<a target="_blank" href="event.php?id=' . htmlspecialchars($row["id"]) . '">';
+                            echo '<h1 class ="caption">' . htmlspecialchars($row["title"]) . '</h1 >';
+                            echo '<img src="' . htmlspecialchars($row["image"]) . '" alt="' . htmlspecialchars($row["title"]) . '" width="300" height="200">';
+                            echo '</a>';                            
+                            echo '</div>'; 
+                        }
+                    } else {
+                        echo "<p>No events found</p>";
+                    }
+                    $conn->close();
+      ?>
+
       </div>
     </div>
     <button herf="#" class="load-more-button">Load More Our Events</button>
